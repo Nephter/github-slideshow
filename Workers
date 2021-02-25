@@ -1,0 +1,37 @@
+pragma solidity >=0.5.0 <0.6.0;
+
+contract Company {
+    
+    event NewWorker(uint workerId, string name, uint num);
+    
+    uint day = 1 days;
+    
+    struct Worker {
+        string name;
+        uint num;
+        uint tenure;
+    }
+    
+    Worker[] public workers;
+    
+mapping(uint => address) workersToLedger;
+mapping(address => uint) companyLedgerCount;
+
+function addWorker(string memory _name, uint _num) public {
+    uint id = workers.push(Worker(_name, _num, 0));
+    workersToLedger[id] = msg.sender;
+    companyLedgerCount[msg.sender]++;
+    emit NewWorker(id, _name, _num);
+}
+
+function addTenure(string memory _name, uint _tenure) public {
+    uint time = Worker(_name, 0, _tenure);
+    Worker[_name].tenure++;
+}
+
+function checkTenure(Worker storage _name) internal returns (uint) {
+    return (_name.tenure);
+}
+
+
+}
