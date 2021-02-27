@@ -2,14 +2,19 @@ pragma solidity >=0.5.0 <0.6.0;
 
 contract Company {
     
-    event NewWorker(uint workerId, string name, uint num);
+    event NewWorker(uint workerId, string name, uint num); 
     
+    // 10,000 Microether	15.0322709 USD
+    
+    uint startingSalary = (0.001 ether) ** week;
     uint day = 1 days;
+    uint week = 5 days;
+    uint year = 52 weeks;
     
     struct Worker {
         string name;
         uint num;
-        uint tenure;
+        uint salary;
     }
     
     Worker[] public workers;
@@ -18,20 +23,33 @@ mapping(uint => address) workersToLedger;
 mapping(address => uint) companyLedgerCount;
 
 function addWorker(string memory _name, uint _num) public {
+    //give Worker "setSalary" below?
     uint id = workers.push(Worker(_name, _num, 0));
     workersToLedger[id] = msg.sender;
     companyLedgerCount[msg.sender]++;
     emit NewWorker(id, _name, _num);
 }
 
-function addTenure(string memory _name, uint _tenure) public {
-    uint time = Worker(_name, 0, _tenure);
-    Worker[_name].tenure++;
+function removeWorker(uint _workerId) public {
+    delete workers[_workerId];
+    }
+
+function _weeklySalary(uint _salary, uint _workerId) external {
+    uint _weeklyPay = _salary ** week;
+    workers[_workerId].salary = _weeklyPay;
 }
 
-function checkTenure(Worker storage _name) internal returns (uint) {
-    return (_name.tenure);
+function setStartingSalary(uint _workerId) public {
+    workers[_workerId].salary = startingSalary;
 }
 
+function goOnHoliday(uint _workerId, uint _daysOff, uint _salary) public {
+    uint dockPay = (_daysOff ** _salary);
+    workers[_workerId].salary = dockPay;
+}
+
+function _oneYearPromotion(uint _workerId, uint _salary) private {
+    ufixed8x1 promotionIncrement = .1;
+    ufixed8x1 promotion = startingSalary ** promotionIncrement;
 
 }
